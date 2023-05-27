@@ -1,77 +1,95 @@
 
-namespace MiPrograma.Models
+namespace ConsoleCalculator.Models
 {
     public class PrintNumber
     {
-        private double number;
-
-        public PrintNumber(double number)
+        public static string NumberString(double number)
         {
-            this.number = Math.Floor(number);
-        }
+            string[] units = { "cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve" };
+            string[] tens = { "", "diez", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa" };
+            string[] teens = { "diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve" };
+            string[] hundreds = { "", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos" };
 
-        public String NumberString()
-        {
-            string[] units = { "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve" };
+            // Convertir el número a su valor absoluto y convertirlo a entero
+            int integerPart = (int)Math.Abs(number);
 
-            string[] tens = { "diez", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa" };
-
-            string[] hundreds = { "cien", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos" };
-
-
-            string finalString = "";
-            string numberAsString = Math.Abs(number).ToString();
-            int[] digits = new int[numberAsString.Length];
-            for (int i = 0; i < numberAsString.Length; i++)
+            if (integerPart > 999 || integerPart < -999)
             {
-                digits[i] = int.Parse(numberAsString[numberAsString.Length - 1 - i].ToString());
+                return "Número fuera de rango. Debe estar entre -999 y 999.";
             }
-            if (digits.Length > 3)
+
+            string result = "";
+
+            if (integerPart == 0)
             {
-                return "Solo hasta 3 digitos";
+                result = units[0];
             }
-            switch (numberAsString)
+            else if (integerPart < 10)
             {
-                case "0": return "cero";
-                case "10": return "diez";
-                case "11": return "once";
-                case "12": return "doce";
-                case "13": return "trece";
-                case "14": return "catorce";
-                case "15": return "quince";
-                default: break;
+                result = units[integerPart];
             }
+            else if (integerPart < 16)
+            {
+                result = teens[integerPart - 10];
+            }
+            else if (integerPart < 20)
+            {
+                result = "dieci" + units[integerPart - 10];
+            }
+            else if (integerPart < 30)
+            {
+                result = "veinti" + units[integerPart - 20];
+            }
+            else if (integerPart < 100)
+            {
+                int tensDigit = integerPart / 10;
+                int unitsDigit = integerPart % 10;
+
+                if (unitsDigit != 0)
+                {
+                    result = tens[tensDigit] + " y " + units[unitsDigit];
+                }
+                else
+                {
+                    result = tens[tensDigit];
+                }
+            }
+            else if (integerPart < 1000)
+            {
+                int hundredsDigit = integerPart / 100;
+                int tensDigit = (integerPart % 100) / 10;
+                int unitsDigit = integerPart % 10;
+
+                if (tensDigit == 0 && unitsDigit == 0)
+                {
+                    result = hundreds[hundredsDigit];
+                }
+                else if (tensDigit == 0)
+                {
+                    result = hundreds[hundredsDigit] + " " + units[unitsDigit];
+                }
+                else if (tensDigit == 1)
+                {
+                    result = hundreds[hundredsDigit] + " " + teens[unitsDigit];
+                }
+                else if (unitsDigit == 0)
+                {
+                    result = hundreds[hundredsDigit] + " " + tens[tensDigit];
+                }
+                else
+                {
+                    result = hundreds[hundredsDigit] + " " + tens[tensDigit] + " y " + units[unitsDigit];
+                }
+            }
+
             if (number < 0)
             {
-                finalString += "menos ";
-            }
-            if (digits.Length >= 3)
-            {
-                int hundred = digits[2];
-                if (hundred != 0)
-                {
-                    finalString += hundreds[hundred - 1] + " ";
-                }
-            }
-            if (digits.Length >= 2)
-            {
-                int ten = digits[1];
-                if (ten != 0)
-                {
-                    finalString += tens[ten - 1] + " y ";
-                }
-            }
-            if (digits.Length >= 1)
-            {
-                int unit = digits[0];
-                if (unit != 0)
-                {
-                    finalString += units[unit - 1];
-                }
+                result = "menos " + result;
             }
 
-            return finalString;
+            return result;
         }
+
     }
 
 }
