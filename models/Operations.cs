@@ -71,8 +71,16 @@ namespace ConsoleCalculator.Models
         public static double CubeRoot()
         {
             double num = InputHelper.GetNumber("Ingrese el número: ");
-
-            return Math.Pow(num, 1.0 / 3.0);
+            double cubeRoot;
+            if (num >= 0)
+            {
+                cubeRoot = Math.Pow(num, 1.0 / 3.0);
+            }
+            else
+            {
+                cubeRoot = -1 * Math.Pow(-num, 1.0 / 3.0);
+            }
+            return cubeRoot;
         }
     }
 }

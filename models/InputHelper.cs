@@ -39,6 +39,7 @@
 
 
 using System;
+using System.Globalization;
 
 namespace ConsoleCalculator.Models
 {
@@ -56,11 +57,12 @@ namespace ConsoleCalculator.Models
 
                 if (input != "nJu09f6wa")
                 {
-                    if (double.TryParse(input, out double parsedNumber))
+                    if (double.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out double parsedNumber))
                     {
                         number = parsedNumber;
                         isValidNumber = true;
                     }
+
                     else
                     {
                         Console.WriteLine("Error: Ingrese un número válido.");
